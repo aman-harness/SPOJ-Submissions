@@ -1,0 +1,80 @@
+// Solution to problem: http://www.spoj.com/problems/TDBFS/english/
+
+// Knowledge:- Important-- A queue is directly cpied. a=b and the queue is copied.
+#include<iostream>
+#include<stack>
+#include<queue>
+#include<set>
+#include<stdio.h>
+#define f(i,a,n) for(i=a;i<n;i++)
+using namespace std;
+int print(queue<int> y){
+	while(!y.empty()){
+		cout << y.front() << " ";y.pop();
+	}
+	cout << endl;
+}
+int bfs(int n,queue<int> input[]){
+	set<int> blue,red;
+	queue<int> x,y;
+	blue.insert(n);x.push(n);
+	int temp = n,tempp;
+	while(!(x.empty())){
+	    temp=x.front();
+		while(!input[temp].empty()){
+            tempp=input[temp].front();
+		    int xx=blue.find(tempp)==blue.end();
+            if(blue.find(tempp)==blue.end())
+			{
+				blue.insert(tempp); x.push(tempp);
+			}
+			input[temp].pop();
+		}
+		x.pop();y.push(temp);
+	}
+	print(y);
+}
+int dfs(int u,queue<int> q[]){
+stack<int > blue;set<int> red;
+queue <int> final;
+int top,index;
+index=u;
+blue.push(u);red.insert(u);final.push(u);
+while(!blue.empty()){
+    index=blue.top();
+    while(!q[index].empty()){
+        top=q[index].front();q[index].pop();
+        if (red.find(top)==red.end()){
+            red.insert(top);blue.push(top);final.push(top);
+            index=top;
+            //cout<< "Pushed :"<< top;
+        }
+    }index=blue.top();
+    blue.pop();
+}
+print(final);
+}
+int main(){
+	int n,temp,m,u,i,v;int count=1,t;
+	cin >> t;
+	while(t--){
+	cin>>n;
+	queue<int> input[1000],dupl[1000];
+	f(i,1,n+1){
+		cin >> temp >> m;
+		while(m--){
+			cin>> temp;
+			if(temp) input[i].push(temp);
+		}
+	}
+	cout << "graph "<<count++<<endl;
+	while(1){
+	cin >> u >> v;
+	if(u==0 && v==0) break;
+	f(i,0,n+3) dupl[i]=input[i];
+
+	if(v==1)bfs(u,dupl);
+	if(v==0)dfs(u,dupl);}
+	}
+	return 0;
+}
